@@ -1,7 +1,7 @@
 import { EmailAlreadyExistsError } from "../errors/email-already-exists.error";
 import { UnauthorizedError } from "../errors/unauthorized.error";
 import { User } from "../models/user.model";
-import { FirebaseAuthError, getAuth, UserRecord } from "firebase-admin/auth";
+import { FirebaseAuthError, getAuth, UpdateRequest, UserRecord } from "firebase-admin/auth";
 import { getAuth as getFirebaseAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export class AuthService {
@@ -29,4 +29,17 @@ export class AuthService {
             throw err;
         });
     };
+
+    async update(id: string, user: User){
+        const props: UpdateRequest = {
+            displayName: user.nome, 
+            email:user.email
+        };
+
+        if(user.password){
+            props.password = user.password
+        }; //Isso faz com que a senha não seja obrigatória na hora de passar para o authentication.
+
+        await getAuth().updateUser(id, props);
+    }
 };

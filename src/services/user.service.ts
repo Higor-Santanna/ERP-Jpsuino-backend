@@ -38,7 +38,8 @@ export class UserService {
 
         userUp.nome = user.nome;
         userUp.email = user.email;
-        this.userRepository.update(userUp);
+        await this.authService.update(id, user);
+        await this.userRepository.update(userUp);
     }
 
     async delete(id: string){
