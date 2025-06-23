@@ -42,4 +42,8 @@ export class AuthService {
 
         await getAuth().updateUser(id, props);
     }
+
+    async delete(id: string){
+        await getAuth().deleteUser(id);
+    }
 };
