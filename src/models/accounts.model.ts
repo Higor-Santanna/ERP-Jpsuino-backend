@@ -27,5 +27,5 @@ export const newAccount = Joi.object().keys({
     accountName: Joi.string().trim().required(),
     value: Joi.number().required(),
     won: Joi.date().iso().required(),
-    status: Joi.string().only().allow(AccountStatus.pending)
+    status: Joi.string().only().required()
 });
