@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { ValidationError } from "../errors/validation.error";
 import { Account } from "../models/accounts.model";
 import { AccountRepository } from "../repositories/account.repository";
+import { NotFoundError } from "../errors/not-found.error";
 
 export class AccountService {
     private accountRepository: AccountRepository;
@@ -29,4 +30,22 @@ export class AccountService {
         }
         await this.accountRepository.save(account)
     }
+
+    async update(id: string, account: Account){
+        const accountUp = await this.accountRepository.getById(id);
+        if (!accountUp) {
+            throw new NotFoundError("Conta não encontrada!");
+        }
+
+        accountUp.accountName = account.accountName;
+        accountUp.value = account.value;
+        accountUp.won = account.won;
+        accountUp.status = account.status;
+
+        await this.accountRepository.update(accountUp)
+    };
+
+    async delete(id: string){
+        await this.accountRepository.delete(id)
+    };
 };

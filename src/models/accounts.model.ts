@@ -23,7 +23,7 @@ export enum AccountStatus {
     pay = "paga"
 };
 
-export const newAccount = Joi.object().keys({
+export const newAccountSchema = Joi.object().keys({
     accountName: Joi.string().trim().required(),
     value: Joi.number().required(),
     won: Joi.date().iso().required(),

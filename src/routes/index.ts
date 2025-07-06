@@ -1,7 +1,7 @@
 import express from "express"
 import { userRoutes } from "./user.router";
 import { authRoutes } from "./auth.router";
-import { accountRoutes } from "./account.routes";
+import { accountRoutes } from "./account.router";
 
 const routes = (app: express.Express) => {
     app.use(express.json());
