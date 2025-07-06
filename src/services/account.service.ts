@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { ValidationError } from "../errors/validation.error";
-import { Account } from "../models/accounts.model";
+import { Account, AccountStatus } from "../models/accounts.model";
 import { AccountRepository } from "../repositories/account.repository";
 import { NotFoundError } from "../errors/not-found.error";
 
@@ -37,10 +37,19 @@ export class AccountService {
             throw new NotFoundError("Conta não encontrada!");
         }
 
+        const wonDate = dayjs(account.won).add(1, "day").startOf("day");
+        const today = dayjs().startOf("day");
+
         accountUp.accountName = account.accountName;
         accountUp.value = account.value;
         accountUp.won = account.won;
         accountUp.status = account.status;
+
+        if(wonDate.isBefore(today) && accountUp.status !== "paga"){
+            accountUp.status = AccountStatus.expired;
+        } else {
+            throw new ValidationError("Não é possivel atualizar o status da conta com esta data.")
+        }
 
         await this.accountRepository.update(accountUp)
     };
