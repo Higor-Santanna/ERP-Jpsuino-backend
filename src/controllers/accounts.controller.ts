@@ -4,8 +4,13 @@ import { AccountService } from "../services/account.service";
 
 export class AccountController {
     static async getAll(req: Request, res: Response) {
-        res.send(await new AccountService().getAll())
-    }
+        res.send(await new AccountService().getAll());
+    };
+
+    static async getById(req: Request, res: Response){
+        let accountId = req.params.id;
+        res.send(await new AccountService().getById(accountId));
+    };
 
     static async save(req: Request, res: Response) {
         let account = req.body as Account;

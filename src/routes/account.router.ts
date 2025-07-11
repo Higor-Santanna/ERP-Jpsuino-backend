@@ -7,6 +7,7 @@ import { celebrate, Segments } from "celebrate";
 const accountRoutes = express.Router();
 
 accountRoutes.get("/accounts", asyncHandler(AccountController.getAll));
+accountRoutes.get("/accounts/:id", asyncHandler(AccountController.getById));
 accountRoutes.post("/accounts", celebrate({[Segments.BODY]: newAccountSchema}), asyncHandler(AccountController.save));
 accountRoutes.put("/accounts/:id", celebrate({[Segments.BODY]: newAccountSchema}), asyncHandler(AccountController.update));
 accountRoutes.delete("/accounts/:id", asyncHandler(AccountController.delete))

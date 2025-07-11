@@ -15,6 +15,14 @@ export class AccountService {
         return this.accountRepository.getAll();
     };
 
+    async getById(id: string){
+        const accountId = await this.accountRepository.getById(id);
+        if(!accountId) {
+            throw new NotFoundError("Conta não encontrada!")
+        }
+        return accountId;
+    };
+
     async save(account: Account) {
         const wonDate = dayjs(account.won).add(1, "day").startOf("day");
         const today = dayjs().startOf("day");
