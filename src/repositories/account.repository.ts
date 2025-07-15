@@ -20,10 +20,10 @@ export class AccountRepository {
     async getById(id: string){
         const doc = await this.collection.doc(id).get();
         if(doc.exists){
-            return {
+            return new Account({
                 id: doc.id,
                 ...doc.data()
-            } as Account
+            });
         } else {
             return null;
         }
