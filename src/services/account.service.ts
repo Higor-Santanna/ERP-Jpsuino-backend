@@ -27,15 +27,20 @@ export class AccountService {
         const wonDate = dayjs(account.won).add(1, "day").startOf("day");
         const today = dayjs().startOf("day");
 
+        if(account.value <= 0 ){
+            throw new ValidationError("O valor da conta precisa ser positivo.")
+        };
+
         if(!wonDate.isValid() || wonDate.isBefore(today)) {
             throw new ValidationError("A data da conta não pode ser anterior à data atual ou está inválida.");
-        }
+        };
 
         account.won = wonDate.toDate();
 
         if(account.status != "pendente"){
             throw new ValidationError("O status é obrigatório ser pendente");
-        }
+        };
+
         await this.accountRepository.save(account)
     }
 
@@ -45,6 +50,10 @@ export class AccountService {
             throw new NotFoundError("Conta não encontrada!");
         }
 
+        if(account.value <= 0 ){
+            throw new ValidationError("O valor da conta precisa ser positivo.")
+        };
+
         const wonDate = dayjs(account.won).add(1, "day").startOf("day");
         const today = dayjs().startOf("day");
 
@@ -53,11 +62,13 @@ export class AccountService {
         accountUp.won = account.won;
         accountUp.status = account.status;
 
-        if(wonDate.isBefore(today) && accountUp.status !== "paga"){
-            accountUp.status = AccountStatus.expired;
-        } else {
-            throw new ValidationError("Não é possivel atualizar o status da conta com esta data.")
-        }
+        if(!wonDate.isValid() || wonDate.isBefore(today)) {
+            throw new ValidationError("A data da conta não pode ser anterior à data atual ou está inválida.");
+        };
+
+        if(account.status != AccountStatus.pending){
+            throw new ValidationError("O status é obrigatório ser pendente");
+        };
 
         await this.accountRepository.update(accountUp)
     };
