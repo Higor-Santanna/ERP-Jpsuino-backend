@@ -12,14 +12,32 @@ export class AccountService {
     };
 
     async getAll() {
-        return this.accountRepository.getAll();
+        const accounts = await this.accountRepository.getAll();
+        const today = dayjs().startOf("day");
+
+        for(const account of accounts){
+            const wonDate = dayjs(account.won).startOf('day');
+            if(account.status === AccountStatus.pending && wonDate.isBefore(today)){
+                account.status = AccountStatus.expired;
+                await this.accountRepository.update(account);
+            };
+        };
+        return accounts;
     };
 
     async getById(id: string){
         const accountId = await this.accountRepository.getById(id);
+        const today = dayjs().startOf('day')
+        const wonDate = dayjs(accountId?.won).startOf('day');
+
+        if(accountId?.status === AccountStatus.pending && wonDate.isBefore(today)){
+            accountId.status = AccountStatus.expired;
+            await this.accountRepository.update(accountId);
+        };
+
         if(!accountId) {
             throw new NotFoundError("Conta não encontrada!")
-        }
+        };
         return accountId;
     };
 
