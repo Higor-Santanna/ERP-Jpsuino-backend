@@ -29,7 +29,7 @@ export const newAccountSchema = Joi.object().keys({
     accountName: Joi.string().trim().required(),
     value: Joi.number().required(),
     won: Joi.date().iso().required(),
-    status: Joi.string().only().required()
+    status: Joi.string().only().allow(AccountStatus.pending).default(AccountStatus.pending)
 });
 
 export const newBillsPaidSchema = Joi.object().keys({
